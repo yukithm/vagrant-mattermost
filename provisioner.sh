@@ -10,17 +10,19 @@
 
 SYSTEM_LOCALE=en_US.utf8
 SYSTEM_TIMEZONE=Asia/Tokyo
-MATTERMOST_VERSION=2.1.0
-MATTERMOST_USER=mattermost
-DB_NAME=mattermost
-DB_USER=mmuser
-DB_PASS=mmuser_password
-RUBY_VERSION=2.3.0
-GO_VERSION=1.6.2
 
 # CentOS 7 official box uses rsync folder for $HOME/sync
-SYNC_DIR=/home/vagrant/sync
-PROVISIONER_DIR=${SYNC_DIR}/provisioner
+export SYNC_DIR=/home/vagrant/sync
+export PROVISIONER_DIR=${SYNC_DIR}/provisioner
+
+# Applications (See provisioner/*.sh)
+export PROV_MATTERMOST_VERSION=3.2.0
+export PROV_MATTERMOST_USER=mattermost
+export PROV_DB_NAME=mattermost
+export PROV_DB_USER=mmuser
+export PROV_DB_PASS=mmuser_password
+export PROV_RUBY_VERSION=2.3.1
+export PROV_GO_VERSION=1.6.3
 
 
 #--------------------------------------
@@ -60,30 +62,33 @@ systemctl disable firewalld
 # Applications
 #--------------------------------------
 
+# Workaround for permissions on Windows host
+chmod u+x "${PROVISIONER_DIR}"/*.sh
+
 # PostgreSQL
-. "$PROVISIONER_DIR/postgresql.sh"
-. "$PROVISIONER_DIR/postgresql-mattermost.sh"
+"$PROVISIONER_DIR/postgresql.sh"
+"$PROVISIONER_DIR/postgresql-mattermost.sh"
 
 # Mattermost
-. "$PROVISIONER_DIR/mattermost.sh"
+"$PROVISIONER_DIR/mattermost.sh"
 
 # Nginx
 # TODO
 
 # redis for hubot
-. "$PROVISIONER_DIR/redis.sh"
+"$PROVISIONER_DIR/redis.sh"
 
 # rbenv
-. "$PROVISIONER_DIR/rbenv.sh"
+"$PROVISIONER_DIR/rbenv.sh"
 
 # ruby for lita
-. "$PROVISIONER_DIR/ruby.sh"
+"$PROVISIONER_DIR/ruby.sh"
 
 # node.js for hubot
-. "$PROVISIONER_DIR/nodejs.sh"
+"$PROVISIONER_DIR/nodejs.sh"
 
 # golang
-. "$PROVISIONER_DIR/golang.sh"
+"$PROVISIONER_DIR/golang.sh"
 
 
 #--------------------------------------
@@ -91,13 +96,13 @@ systemctl disable firewalld
 #--------------------------------------
 
 # tig (latest version instead of epel version)
-. "$PROVISIONER_DIR/tig.sh"
+"$PROVISIONER_DIR/tig.sh"
 
 # tmux
-. "$PROVISIONER_DIR/tmux.sh"
+"$PROVISIONER_DIR/tmux.sh"
 
 # direnv
-. "$PROVISIONER_DIR/direnv.sh"
+"$PROVISIONER_DIR/direnv.sh"
 
 
 #--------------------------------------
@@ -107,7 +112,7 @@ systemctl disable firewalld
 if [[ -f "${SYNC_DIR}/user-provisioner.sh" ]]; then
     # /bin/sh "${SYNC_DIR}/user-provisioner.sh"
 
-    # Workaround for shebang
+    # Workaround for permissions and shebang
     chmod u+x "${SYNC_DIR}/user-provisioner.sh"
     "${SYNC_DIR}/user-provisioner.sh"
 fi
