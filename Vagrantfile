@@ -42,7 +42,7 @@ Vagrant.configure(2) do |config|
   # config.vm.network "private_network", ip: "192.168.33.10"
 
   # Mattermost
-  config.vm.network "forwarded_port", guest: 8065, host: 8065
+  config.vm.network "forwarded_port", guest: 8065, host: 8065, auto_correct: true, id: "mattermost"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
