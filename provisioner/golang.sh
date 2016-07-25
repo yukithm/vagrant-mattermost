@@ -17,5 +17,5 @@ popd
 
 # Add to PATH
 cat <<'EOS' >/etc/profile.d/golang.sh
-export PATH="/usr/local/go/bin:$PATH"
+export PATH=/usr/local/go/bin:$PATH
 EOS
